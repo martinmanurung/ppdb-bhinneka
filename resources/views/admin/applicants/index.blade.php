@@ -15,16 +15,16 @@
             class="px-4 py-2 rounded-xl text-sm font-medium transition {{ !request('status') ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
             Semua
         </a>
-        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_MENUNGGU_BERKAS]) }}"
-            class="px-4 py-2 rounded-xl text-sm font-medium transition {{ request('status') === \App\Models\Student::STATUS_MENUNGGU_BERKAS ? 'bg-amber-500 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
+        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
+            class="px-4 py-2 rounded-xl text-sm font-medium transition {{ request('status') === \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS ? 'bg-amber-500 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
             Menunggu Berkas
         </a>
-        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_TERVERIFIKASI]) }}"
-            class="px-4 py-2 rounded-xl text-sm font-medium transition {{ request('status') === \App\Models\Student::STATUS_TERVERIFIKASI ? 'bg-green-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
+        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_TERVERIFIKASI]) }}"
+            class="px-4 py-2 rounded-xl text-sm font-medium transition {{ request('status') === \App\Models\Pendaftaran::STATUS_TERVERIFIKASI ? 'bg-green-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
             Terverifikasi
         </a>
-        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_DITOLAK]) }}"
-            class="px-4 py-2 rounded-xl text-sm font-medium transition {{ request('status') === \App\Models\Student::STATUS_DITOLAK ? 'bg-red-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
+        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_DITOLAK]) }}"
+            class="px-4 py-2 rounded-xl text-sm font-medium transition {{ request('status') === \App\Models\Pendaftaran::STATUS_DITOLAK ? 'bg-red-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50' }}">
             Ditolak
         </a>
     </div>
@@ -69,13 +69,13 @@
                         <tr class="hover:bg-slate-50/80">
                             <td class="px-5 py-4 text-slate-500">{{ $applicants->firstItem() + $index }}</td>
                             <td class="px-5 py-4">
-                                <p class="font-semibold text-slate-900">{{ $applicant->nama_lengkap }}</p>
-                                <p class="text-xs text-slate-500">{{ $applicant->user->email }}</p>
+                                <p class="font-semibold text-slate-900">{{ $applicant->student->nama_lengkap }}</p>
+                                <p class="text-xs text-slate-500">{{ $applicant->nomor_pendaftaran }}</p>
                             </td>
-                            <td class="px-5 py-4 text-slate-600">{{ $applicant->asal_sekolah }}</td>
-                            <td class="px-5 py-4 text-slate-600">{{ $applicant->jenjang ?? '-' }}</td>
+                            <td class="px-5 py-4 text-slate-600">{{ $applicant->student->asal_sekolah }}</td>
+                            <td class="px-5 py-4 text-slate-600">{{ $applicant->student->jenjang ?? '-' }}</td>
                             <td class="px-5 py-4">
-                                <x-admin.status-badge :status="$applicant->status_verifikasi" />
+                                <x-admin.status-badge :status="$applicant->status" />
                             </td>
                             <td class="px-5 py-4 text-slate-600 whitespace-nowrap">{{ $applicant->submitted_at?->format('d/m/Y H:i') }}</td>
                             <td class="px-5 py-4">

@@ -2,10 +2,10 @@
 
 @php
     $classes = match ($status) {
-        \App\Models\Student::STATUS_TERVERIFIKASI => 'bg-green-100 text-green-800 border-green-200',
-        \App\Models\Student::STATUS_DITOLAK => 'bg-red-100 text-red-800 border-red-200',
-        \App\Models\Student::STATUS_MENUNGGU_BERKAS => 'bg-amber-100 text-amber-800 border-amber-200',
-        \App\Models\Student::STATUS_BELUM_SUBMIT => 'bg-slate-100 text-slate-700 border-slate-200',
+        \App\Models\Pendaftaran::STATUS_TERVERIFIKASI => 'bg-green-100 text-green-800 border-green-200',
+        \App\Models\Pendaftaran::STATUS_DITOLAK => 'bg-red-100 text-red-800 border-red-200',
+        \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS => 'bg-amber-100 text-amber-800 border-amber-200',
+        \App\Models\Pendaftaran::STATUS_BELUM_SUBMIT => 'bg-slate-100 text-slate-700 border-slate-200',
         default => 'bg-gray-100 text-gray-800 border-gray-200',
     };
 @endphp

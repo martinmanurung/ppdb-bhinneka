@@ -44,9 +44,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Applicants Management
     Route::get('/applicants', [AdminController::class, 'applicants'])->name('applicants.index');
-    Route::get('/applicants/{student}', [AdminController::class, 'showApplicant'])->name('applicants.show');
-    Route::get('/applicants/{student}/print', [AdminController::class, 'printForm'])->name('applicants.print');
-    Route::put('/applicants/{student}/status', [AdminController::class, 'updateVerificationStatus'])
+    Route::get('/applicants/{pendaftaran}', [AdminController::class, 'showApplicant'])->name('applicants.show');
+    Route::get('/applicants/{pendaftaran}/print', [AdminController::class, 'printForm'])->name('applicants.print');
+    Route::put('/applicants/{pendaftaran}/status', [AdminController::class, 'updateVerificationStatus'])
         ->name('applicants.update-status');
 
     Route::get('/export', [AdminController::class, 'exportForm'])->name('export');

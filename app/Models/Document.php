@@ -13,7 +13,7 @@ class Document extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
+        'pendaftaran_id',
         'document_type',
         'file_path',
         'file_name',
@@ -53,9 +53,9 @@ class Document extends Model
     /**
      * Get the student that owns the document.
      */
-    public function student(): BelongsTo
+    public function pendaftaran(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Pendaftaran::class);
     }
 
     /**

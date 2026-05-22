@@ -48,7 +48,21 @@ Dokumen ini berisi gambaran umum, fitur utama, dan alur kerja untuk sistem websi
 
 ---
 
-## 4. Status Pendaftaran
+## 4. Struktur Database (Ringkas)
+
+| Tabel | Fungsi |
+|-------|--------|
+| `students` | Biodata calon siswa saja |
+| `pendaftaran` | Proses PPDB: `nomor_pendaftaran`, status, submit, penolakan |
+| `ayah` | Data ayah kandung (1 per pendaftaran) |
+| `ibu` | Data ibu kandung (1 per pendaftaran) |
+| `wali` | Data wali opsional (1 per pendaftaran) |
+
+Nomor pendaftaran otomatis, format: `PPDB-{tahun}-{urutan}` (contoh: `PPDB-2026-00001`).
+
+---
+
+## 5. Status Pendaftaran
 
 | Status | Keterangan |
 |--------|------------|
@@ -59,7 +73,7 @@ Dokumen ini berisi gambaran umum, fitur utama, dan alur kerja untuk sistem websi
 
 ---
 
-## 5. Rencana Pengembangan Selanjutnya (Future Roadmap)
+## 6. Rencana Pengembangan Selanjutnya (Future Roadmap)
 
 * Fitur cetak Kartu Tanda Peserta PPDB otomatis dalam bentuk PDF.
 * Notifikasi otomatis via Email/WhatsApp setiap kali ada perubahan status.

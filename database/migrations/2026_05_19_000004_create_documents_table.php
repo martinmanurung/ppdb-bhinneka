@@ -6,14 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
+        if (Schema::hasTable('documents')) {
+            return;
+        }
+
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
             $table->enum('document_type', ['kk', 'akta', 'ijazah']);
             $table->string('file_path');
             $table->string('file_name');
@@ -23,13 +24,10 @@ return new class extends Migration
             $table->text('verification_notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['student_id', 'document_type']);
+            $table->unique(['pendaftaran_id', 'document_type']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('documents');

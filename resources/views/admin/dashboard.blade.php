@@ -42,17 +42,17 @@
             <p class="text-3xl font-black text-blue-600 group-hover:scale-105 transition-transform">{{ $stats['submitted'] }}</p>
             <p class="text-sm text-slate-600 mt-1">Sudah Submit Online</p>
         </a>
-        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_MENUNGGU_BERKAS]) }}"
+        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
             class="bg-white rounded-2xl border border-amber-200 p-5 shadow-sm hover:border-amber-400 transition group">
             <p class="text-3xl font-black text-amber-600">{{ $stats['waiting_documents'] }}</p>
             <p class="text-sm text-slate-600 mt-1">Menunggu Berkas</p>
         </a>
-        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_TERVERIFIKASI]) }}"
+        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_TERVERIFIKASI]) }}"
             class="bg-white rounded-2xl border border-green-200 p-5 shadow-sm hover:border-green-400 transition">
             <p class="text-3xl font-black text-green-600">{{ $stats['verified'] }}</p>
             <p class="text-sm text-slate-600 mt-1">Terverifikasi</p>
         </a>
-        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_DITOLAK]) }}"
+        <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_DITOLAK]) }}"
             class="bg-white rounded-2xl border border-red-200 p-5 shadow-sm hover:border-red-400 transition">
             <p class="text-3xl font-black text-red-600">{{ $stats['rejected'] }}</p>
             <p class="text-sm text-slate-600 mt-1">Ditolak</p>
@@ -71,7 +71,7 @@
                 <p class="text-sm text-slate-500">Pendaftar yang sudah submit formulir online</p>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_MENUNGGU_BERKAS]) }}"
+                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
                     class="text-sm bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg font-medium hover:bg-amber-200">
                     <i class="fas fa-folder-open mr-1"></i> Antrian Berkas
                 </a>
@@ -97,13 +97,13 @@
                     @forelse ($recentApplicants as $applicant)
                         <tr class="hover:bg-slate-50/80">
                             <td class="px-6 py-4">
-                                <p class="font-semibold text-slate-900">{{ $applicant->nama_lengkap }}</p>
-                                <p class="text-xs text-slate-500">{{ $applicant->user->email }}</p>
+                                <p class="font-semibold text-slate-900">{{ $applicant->student->nama_lengkap }}</p>
+                                <p class="text-xs text-slate-500">{{ $applicant->nomor_pendaftaran }}</p>
                             </td>
-                            <td class="px-6 py-4 text-slate-600">{{ $applicant->jenjang ?? '-' }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $applicant->student->jenjang ?? '-' }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $applicant->user->whatsapp }}</td>
                             <td class="px-6 py-4">
-                                <x-admin.status-badge :status="$applicant->status_verifikasi" />
+                                <x-admin.status-badge :status="$applicant->status" />
                             </td>
                             <td class="px-6 py-4 text-slate-600">{{ $applicant->submitted_at?->format('d/m/Y') }}</td>
                             <td class="px-6 py-4">

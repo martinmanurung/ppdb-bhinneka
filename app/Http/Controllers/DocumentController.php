@@ -4,30 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentUploadRequest;
 use App\Models\Document;
-use App\Models\Student;
+use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
-    /**
-     * Upload document
-     */
     public function upload(DocumentUploadRequest $request)
     {
-        $user = Auth::user();
-        $student = $user->student;
+        $pendaftaran = Auth::user()->pendaftaran ?? Auth::user()->student?->pendaftaran;
 
-        if (!$student) {
-            return redirect()->back()
-                ->with('error', 'Data siswa tidak ditemukan');
+        if (! $pendaftaran) {
+            return redirect()->back()->with('error', 'Data pendaftaran tidak ditemukan');
         }
 
         $file = $request->file('file');
         $documentType = $request->document_type;
 
-        // Delete existing document file if any before replacing it
-        $existingDocument = Document::where('student_id', $student->id)
+        $existingDocument = Document::where('pendaftaran_id', $pendaftaran->id)
             ->where('document_type', $documentType)
             ->first();
 
@@ -36,12 +30,10 @@ class DocumentController extends Controller
             $existingDocument->delete();
         }
 
-        // Store file
-        $path = $file->store("documents/{$student->id}/{$documentType}", 'public');
+        $path = $file->store("documents/{$pendaftaran->id}/{$documentType}", 'public');
 
-        // Create document record
         Document::create([
-            'student_id' => $student->id,
+            'pendaftaran_id' => $pendaftaran->id,
             'document_type' => $documentType,
             'file_path' => $path,
             'file_name' => $file->getClientOriginalName(),
@@ -50,47 +42,35 @@ class DocumentController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->back()
-            ->with('success', 'Dokumen berhasil diunggah dan menunggu verifikasi');
+        return redirect()->back()->with('success', 'Dokumen berhasil diunggah');
     }
 
-    /**
-     * Download document
-     */
     public function download($documentId)
     {
-        $document = Document::findOrFail($documentId);
+        $document = Document::with('pendaftaran.user')->findOrFail($documentId);
 
-        // Check authorization
-        if (Auth::id() !== $document->student->user_id && !(Auth::user()?->role === 'admin')) {
-            abort(403, 'Unauthorized');
+        if (Auth::id() !== $document->pendaftaran->user_id && ! Auth::user()?->isAdmin()) {
+            abort(403);
         }
 
         return response()->download(Storage::disk('public')->path($document->file_path), $document->file_name);
     }
 
-    /**
-     * Delete document
-     */
     public function delete($documentId)
     {
-        $document = Document::findOrFail($documentId);
+        $document = Document::with('pendaftaran')->findOrFail($documentId);
 
-        // Check authorization
-        if (Auth::id() !== $document->student->user_id) {
-            abort(403, 'Unauthorized');
+        if (Auth::id() !== $document->pendaftaran->user_id) {
+            abort(403);
         }
 
-        // Only allow deletion if not verified
-        if ($document->student->status_verifikasi === 'Terverifikasi') {
-            return redirect()->back()
-                ->with('error', 'Tidak dapat menghapus dokumen yang sudah terverifikasi');
+        if ($document->pendaftaran->status === Pendaftaran::STATUS_TERVERIFIKASI) {
+            return redirect()->back()->with('error', 'Tidak dapat menghapus dokumen setelah terverifikasi');
         }
 
         Storage::disk('public')->delete($document->file_path);
         $document->delete();
 
-        return redirect()->back()
-            ->with('success', 'Dokumen berhasil dihapus');
+        return redirect()->back()->with('success', 'Dokumen berhasil dihapus');
     }
 }

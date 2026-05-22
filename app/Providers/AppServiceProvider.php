@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Student;
+use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('layouts.admin', function ($view) {
             $view->with('adminNavCounts', [
-                'waiting' => Student::where('status_verifikasi', Student::STATUS_MENUNGGU_BERKAS)
+                'waiting' => Pendaftaran::where('status', Pendaftaran::STATUS_MENUNGGU_BERKAS)
                     ->whereNotNull('submitted_at')
                     ->count(),
             ]);

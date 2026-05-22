@@ -35,7 +35,7 @@
                         </span>
                     @endif
                 </a>
-                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Student::STATUS_MENUNGGU_BERKAS]) }}"
+                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
                     <i class="fas fa-folder-open w-5 text-center"></i>
                     Antrian Berkas

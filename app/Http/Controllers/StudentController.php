@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StudentDataRequest;
 use App\Http\Requests\ParentDataRequest;
+use App\Http\Requests\StudentDataRequest;
+use App\Models\Pendaftaran;
 use App\Models\Student;
-use App\Models\ParentProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,10 +15,12 @@ class StudentController extends Controller
     {
         $user = Auth::user();
         $student = $user->student;
+        $pendaftaran = $user->pendaftaran ?? $student?->pendaftaran;
 
         return view('student.dashboard', [
             'student' => $student,
-            'registrationProgress' => $this->getRegistrationProgress($student),
+            'pendaftaran' => $pendaftaran,
+            'registrationProgress' => $this->getRegistrationProgress($student, $pendaftaran),
         ]);
     }
 
@@ -26,35 +28,40 @@ class StudentController extends Controller
     {
         $user = Auth::user();
         $student = $user->student;
+        $pendaftaran = $user->pendaftaran ?? $student?->pendaftaran;
 
-        if ($student && ! $student->canEditForms()) {
+        if ($pendaftaran && ! $pendaftaran->canEditForms()) {
             return redirect()->route('student.dashboard')
                 ->with('error', 'Formulir tidak dapat diubah setelah dikirim. Hubungi sekolah jika ada koreksi.');
         }
 
-        $student = $student ?? new Student();
-
-        return view('student.forms.biodata', ['student' => $student]);
+        return view('student.forms.biodata', [
+            'student' => $student ?? new Student(),
+        ]);
     }
 
     public function storeBiodata(StudentDataRequest $request)
     {
         $user = Auth::user();
         $student = $user->student;
+        $pendaftaran = $user->pendaftaran ?? $student?->pendaftaran;
 
-        if ($student && ! $student->canEditForms()) {
+        if ($pendaftaran && ! $pendaftaran->canEditForms()) {
             return redirect()->route('student.dashboard')
                 ->with('error', 'Formulir tidak dapat diubah setelah dikirim.');
         }
 
         $student = $student ?? new Student(['user_id' => $user->id]);
         $student->fill($request->validated());
-
-        if (! $student->status_verifikasi) {
-            $student->status_verifikasi = Student::STATUS_BELUM_SUBMIT;
-        }
-
         $student->save();
+
+        Pendaftaran::firstOrCreate(
+            ['student_id' => $student->id],
+            [
+                'user_id' => $user->id,
+                'status' => Pendaftaran::STATUS_BELUM_SUBMIT,
+            ]
+        );
 
         return redirect()->route('student.form.parents')
             ->with('success', 'Data biodata berhasil disimpan!');
@@ -70,16 +77,21 @@ class StudentController extends Controller
                 ->with('error', 'Silakan lengkapi data biodata terlebih dahulu');
         }
 
-        if (! $student->canEditForms()) {
+        $pendaftaran = $this->resolvePendaftaran($student);
+
+        if (! $pendaftaran->canEditForms()) {
             return redirect()->route('student.dashboard')
                 ->with('error', 'Formulir tidak dapat diubah setelah dikirim.');
         }
 
+        $pendaftaran->load(['ayah', 'ibu', 'wali']);
+
         return view('student.forms.parents', [
             'student' => $student,
-            'ayah' => $student->father(),
-            'ibu' => $student->mother(),
-            'wali' => $student->wali(),
+            'pendaftaran' => $pendaftaran,
+            'ayah' => $pendaftaran->ayah,
+            'ibu' => $pendaftaran->ibu,
+            'wali' => $pendaftaran->wali,
         ]);
     }
 
@@ -93,26 +105,34 @@ class StudentController extends Controller
                 ->with('error', 'Silakan lengkapi data biodata terlebih dahulu');
         }
 
-        if (! $student->canEditForms()) {
+        $pendaftaran = $this->resolvePendaftaran($student);
+
+        if (! $pendaftaran->canEditForms()) {
             return redirect()->route('student.dashboard')
                 ->with('error', 'Formulir tidak dapat diubah setelah dikirim.');
         }
 
-        $student->parents()->delete();
+        $pendaftaran->ayah()->updateOrCreate(
+            ['pendaftaran_id' => $pendaftaran->id],
+            $request->validated()['ayah']
+        );
 
-        foreach ($request->parents as $parentData) {
-            if (($parentData['jenis_wali'] ?? '') === 'Wali' && blank($parentData['nama_lengkap'] ?? null)) {
-                continue;
-            }
+        $pendaftaran->ibu()->updateOrCreate(
+            ['pendaftaran_id' => $pendaftaran->id],
+            $request->validated()['ibu']
+        );
 
-            ParentProfile::create(array_merge(
-                $parentData,
-                ['student_id' => $student->id]
-            ));
+        if (filled($request->input('wali.nama_lengkap'))) {
+            $pendaftaran->wali()->updateOrCreate(
+                ['pendaftaran_id' => $pendaftaran->id],
+                $request->validated()['wali']
+            );
+        } else {
+            $pendaftaran->wali()?->delete();
         }
 
         return redirect()->route('student.form.konfirmasi')
-            ->with('success', 'Data orangtua/wali berhasil disimpan!');
+            ->with('success', 'Data orang tua/wali berhasil disimpan!');
     }
 
     public function showKonfirmasiForm()
@@ -125,14 +145,17 @@ class StudentController extends Controller
                 ->with('error', 'Silakan lengkapi data biodata terlebih dahulu');
         }
 
-        if (! $student->isFormComplete()) {
+        $pendaftaran = $this->resolvePendaftaran($student);
+
+        if (! $pendaftaran->isFormComplete()) {
             return redirect()->route('student.form.parents')
-                ->with('error', 'Silakan lengkapi data orangtua/wali terlebih dahulu');
+                ->with('error', 'Silakan lengkapi data ayah dan ibu terlebih dahulu');
         }
 
         return view('student.forms.konfirmasi', [
             'student' => $student,
-            'requiredDocuments' => Student::REQUIRED_PHYSICAL_DOCUMENTS,
+            'pendaftaran' => $pendaftaran,
+            'requiredDocuments' => Pendaftaran::REQUIRED_PHYSICAL_DOCUMENTS,
         ]);
     }
 
@@ -141,12 +164,19 @@ class StudentController extends Controller
         $user = Auth::user();
         $student = $user->student;
 
-        if (! $student || ! $student->isFormComplete()) {
+        if (! $student) {
             return redirect()->route('student.dashboard')
-                ->with('error', 'Lengkapi biodata dan data orangtua/wali terlebih dahulu.');
+                ->with('error', 'Lengkapi biodata terlebih dahulu.');
         }
 
-        if ($student->hasSubmittedOnline() && $student->status_verifikasi !== Student::STATUS_DITOLAK) {
+        $pendaftaran = $this->resolvePendaftaran($student);
+
+        if (! $pendaftaran->isFormComplete()) {
+            return redirect()->route('student.dashboard')
+                ->with('error', 'Lengkapi biodata dan data orang tua terlebih dahulu.');
+        }
+
+        if ($pendaftaran->hasSubmittedOnline() && $pendaftaran->status !== Pendaftaran::STATUS_DITOLAK) {
             return redirect()->route('student.dashboard')
                 ->with('info', 'Formulir pendaftaran Anda sudah dikirim.');
         }
@@ -157,8 +187,8 @@ class StudentController extends Controller
             'konfirmasi.accepted' => 'Anda harus menyetujui bahwa data yang diisi sudah benar.',
         ]);
 
-        $student->update([
-            'status_verifikasi' => Student::STATUS_MENUNGGU_BERKAS,
+        $pendaftaran->update([
+            'status' => Pendaftaran::STATUS_MENUNGGU_BERKAS,
             'submitted_at' => now(),
             'alasan_penolakan' => null,
         ]);
@@ -167,13 +197,24 @@ class StudentController extends Controller
             ->with('success', 'Formulir berhasil dikirim! Silakan datang ke sekolah untuk menyerahkan berkas persyaratan.');
     }
 
-    private function getRegistrationProgress(?Student $student): array
+    private function resolvePendaftaran(Student $student): Pendaftaran
+    {
+        return Pendaftaran::firstOrCreate(
+            ['student_id' => $student->id],
+            [
+                'user_id' => $student->user_id,
+                'status' => Pendaftaran::STATUS_BELUM_SUBMIT,
+            ]
+        );
+    }
+
+    private function getRegistrationProgress(?Student $student, ?Pendaftaran $pendaftaran): array
     {
         return [
             'biodata' => $student !== null,
-            'parents' => $student !== null && $student->isFormComplete(),
-            'submitted' => $student !== null && $student->hasSubmittedOnline(),
-            'verified' => $student !== null && $student->isVerified(),
+            'parents' => $pendaftaran !== null && $pendaftaran->isFormComplete(),
+            'submitted' => $pendaftaran !== null && $pendaftaran->hasSubmittedOnline(),
+            'verified' => $pendaftaran !== null && $pendaftaran->isVerified(),
         ];
     }
 }

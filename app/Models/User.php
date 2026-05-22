@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -18,11 +17,6 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -31,28 +25,23 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the student profile associated with the user.
-     */
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
     }
 
-    /**
-     * Check if user is admin.
-     */
+    public function pendaftaran(): HasOne
+    {
+        return $this->hasOne(Pendaftaran::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Check if user is a student/applicant.
-     */
     public function isStudent(): bool
     {
         return $this->role === 'student';
     }
 }
-
