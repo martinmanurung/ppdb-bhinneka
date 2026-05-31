@@ -21,7 +21,7 @@
             <div class="bg-white/10 rounded-xl p-4 backdrop-blur">
                 <span class="text-2xl font-black text-sky-300">2</span>
                 <p class="font-semibold mt-2 text-sm">Cocokkan Berkas</p>
-                <p class="text-xs text-slate-300 mt-1">KK, Akta, Ijazah/SKL fisik</p>
+                <p class="text-xs text-slate-300 mt-1">Cek kelengkapan berkas fisik</p>
             </div>
             <div class="bg-white/10 rounded-xl p-4 backdrop-blur">
                 <span class="text-2xl font-black text-sky-300">3</span>
@@ -68,7 +68,7 @@
         <div class="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
             <div>
                 <h2 class="text-lg font-bold text-slate-900">Antrian Verifikasi</h2>
-                <p class="text-sm text-slate-500">Pendaftar yang sudah submit formulir online</p>
+                <p class="text-sm text-slate-500">Calon siswa yang sudah submit formulir online</p>
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
@@ -133,7 +133,7 @@
 
         <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-wrap gap-3">
             <a href="{{ route('admin.applicants.index') }}" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800">
-                Kelola Semua Pendaftar
+                Kelola Semua Calon Siswa
             </a>
             <a href="{{ route('admin.export') }}" class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-emerald-700">
                 <i class="fas fa-file-excel mr-1"></i> Export Data

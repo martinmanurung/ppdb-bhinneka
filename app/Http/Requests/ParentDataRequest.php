@@ -23,7 +23,9 @@ class ParentDataRequest extends FormRequest
         if (empty($ibu['kewarganegaraan'])) {
             $ibu['kewarganegaraan'] = 'Indonesia';
         }
-        if (! empty($wali['nama_lengkap']) && empty($wali['kewarganegaraan'])) {
+        if (! filled(trim($wali['nama_lengkap'] ?? ''))) {
+            $wali = [];
+        } elseif (empty($wali['kewarganegaraan'])) {
             $wali['kewarganegaraan'] = 'Indonesia';
         }
 
@@ -63,14 +65,14 @@ class ParentDataRequest extends FormRequest
 
         $waliRules = [
             'nama_lengkap' => ['nullable', 'string', 'max:255'],
-            'tempat_lahir' => ['required_with:wali.nama_lengkap', 'string', 'max:255'],
-            'tanggal_lahir' => ['required_with:wali.nama_lengkap', 'date', 'before:today'],
-            'agama' => ['required_with:wali.nama_lengkap', 'in:Islam,Kristen,Katolik,Hindu,Budha,Kong Hu Cu'],
-            'kewarganegaraan' => ['required_with:wali.nama_lengkap', 'string', 'max:50'],
+            'tempat_lahir' => ['nullable', 'required_with:wali.nama_lengkap', 'string', 'max:255'],
+            'tanggal_lahir' => ['nullable', 'required_with:wali.nama_lengkap', 'date', 'before:today'],
+            'agama' => ['nullable', 'required_with:wali.nama_lengkap', 'in:Islam,Kristen,Katolik,Hindu,Budha,Kong Hu Cu'],
+            'kewarganegaraan' => ['nullable', 'required_with:wali.nama_lengkap', 'string', 'max:50'],
             'pendidikan' => ['nullable', 'string', 'max:255'],
-            'pekerjaan' => ['required_with:wali.nama_lengkap', 'string', 'max:255'],
-            'alamat' => ['required_with:wali.nama_lengkap', 'string'],
-            'no_telp' => ['required_with:wali.nama_lengkap', 'string', 'max:20'],
+            'pekerjaan' => ['nullable', 'required_with:wali.nama_lengkap', 'string', 'max:255'],
+            'alamat' => ['nullable', 'required_with:wali.nama_lengkap', 'string'],
+            'no_telp' => ['nullable', 'required_with:wali.nama_lengkap', 'string', 'max:20'],
             'nik' => ['nullable', 'string', 'max:20'],
             'penghasilan' => ['nullable', 'numeric', 'min:0'],
             'hubungan_kerabat' => ['nullable', 'string', 'max:100'],

@@ -11,6 +11,23 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+    public function showBerkas()
+    {
+        return view('student.berkas');
+    }
+
+    public function downloadSuratPernyataan()
+    {
+        $path = public_path('surat-pernyataan.pdf');
+
+        if (! file_exists($path)) {
+            return redirect()->route('student.dashboard')
+                ->with('error', 'File surat pernyataan belum tersedia. Hubungi sekolah.');
+        }
+
+        return response()->download($path, 'Surat-Pernyataan-PPDB-Bhinneka.pdf');
+    }
+
     public function dashboard()
     {
         $user = Auth::user();
@@ -122,7 +139,7 @@ class StudentController extends Controller
             $request->validated()['ibu']
         );
 
-        if (filled($request->input('wali.nama_lengkap'))) {
+        if (filled(trim($request->input('wali.nama_lengkap', '')))) {
             $pendaftaran->wali()->updateOrCreate(
                 ['pendaftaran_id' => $pendaftaran->id],
                 $request->validated()['wali']

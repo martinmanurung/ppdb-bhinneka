@@ -1,12 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.student')
 
-@section('title', 'Biodata Diri')
+@section('title', 'Biodata Siswa')
 
 @section('content')
-<div class="max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Isi Biodata Diri</h1>
+<div>
+    <h1 class="text-2xl font-bold text-slate-900 mb-1">Biodata Calon Siswa</h1>
+    <p class="text-slate-600 text-sm mb-6">Lengkapi data diri calon siswa dengan benar sesuai dokumen resmi.</p>
 
-    <form action="{{ route('student.form.biodata') }}" method="POST" class="bg-white rounded-lg shadow p-6 space-y-4">
+    @include('student.partials.berkas-panel', ['compact' => true, 'showDownload' => false, 'class' => 'mb-6'])
+
+    <form action="{{ route('student.form.biodata') }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
         @csrf
 
         <div>

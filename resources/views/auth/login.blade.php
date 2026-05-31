@@ -1,77 +1,75 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
-@section('title', 'Login')
+@section('title', 'Masuk')
+
+@section('hero')
+    <h1 class="text-3xl lg:text-4xl font-bold leading-tight mb-4">Selamat datang kembali!</h1>
+    <p class="text-teal-50 text-lg mb-8">Masuk untuk melanjutkan pendaftaran calon siswa PPDB Sekolah Bhinneka.</p>
+    <ul class="space-y-4 text-sm">
+        <li class="flex items-start gap-3">
+            <span class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><i class="fas fa-user"></i></span>
+            <span>Lengkapi biodata calon siswa</span>
+        </li>
+        <li class="flex items-start gap-3">
+            <span class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><i class="fas fa-users"></i></span>
+            <span>Isi data ayah & ibu (wali opsional)</span>
+        </li>
+        <li class="flex items-start gap-3">
+            <span class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><i class="fas fa-school"></i></span>
+            <span>Kirim formulir & serahkan berkas ke sekolah</span>
+        </li>
+    </ul>
+@endsection
 
 @section('content')
-<div class="max-w-5xl mx-auto space-y-8">
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-blue-700">Login PPDB</h1>
-        <p class="mt-2 text-gray-600">Gunakan satu akun untuk masuk sebagai calon pendaftar atau admin. Sistem akan mengarahkan Anda sesuai role.</p>
-    </div>
+    <h2 class="text-2xl font-bold text-slate-900 mb-1">Masuk Akun</h2>
+    <p class="text-slate-500 text-sm mb-8">Gunakan email atau nomor WhatsApp yang terdaftar.</p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-blue-100 border border-blue-200 rounded-2xl p-6 shadow-sm">
-            <div class="text-4xl mb-4">🎓</div>
-            <h2 class="text-2xl font-bold text-gray-900">Untuk Calon Pendaftar</h2>
-            <p class="mt-2 text-gray-700">Masuk untuk melengkapi formulir pendaftaran online, lalu serahkan berkas fisik ke sekolah.</p>
-            <ul class="mt-4 space-y-2 text-sm text-gray-700">
-                <li>• Isi data pribadi calon siswa</li>
-                <li>• Lengkapi data orang tua / wali</li>
-                <li>• Kirim formulir & bawa berkas ke sekolah</li>
-            </ul>
-        </div>
+    <form action="{{ route('login') }}" method="POST" class="space-y-5">
+        @csrf
 
-        <div class="bg-green-100 border border-green-200 rounded-2xl p-6 shadow-sm">
-            <div class="text-4xl mb-4">👨‍💼</div>
-            <h2 class="text-2xl font-bold text-gray-900">Untuk Admin</h2>
-            <p class="mt-2 text-gray-700">Masuk untuk mencetak formulir, verifikasi berkas fisik, dan mengubah status pendaftaran.</p>
-            <ul class="mt-4 space-y-2 text-sm text-gray-700">
-                <li>• Cetak formulir pendaftar</li>
-                <li>• Cocokkan data dengan berkas fisik</li>
-                <li>• Update status setelah pembayaran</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-        <h2 class="text-2xl font-bold mb-2 text-center">Masuk ke Sistem</h2>
-        <p class="text-center text-gray-500 mb-6">Akun akan diarahkan otomatis sesuai role Anda.</p>
-
-        <form action="{{ route('login') }}" method="POST" class="space-y-4">
-            @csrf
-
-            <div>
-                <label for="login" class="block text-sm font-medium text-gray-700">Email / No. WhatsApp</label>
-                <input type="text" id="login" name="login" value="{{ old('login') }}" required placeholder="contoh: user@email.com atau 08xxxxxxxxxx"
-                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 @error('login') border-red-500 @enderror">
-                @error('login')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+        <div>
+            <label for="login" class="block text-sm font-medium text-slate-700 mb-1">Email / No. WhatsApp</label>
+            <div class="relative">
+                <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="login" name="login" value="{{ old('login') }}" required
+                    placeholder="user@email.com atau 08xxxxxxxxxx"
+                    class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 @error('login') border-red-400 @enderror">
             </div>
+            @error('login')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <div>
+            <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                 <input type="password" id="password" name="password" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 @error('password') border-red-500 @enderror">
-                @error('password')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+                    class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 @error('password') border-red-400 @enderror">
             </div>
+            @error('password')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-            <div class="flex items-center">
-                <input type="checkbox" id="remember" name="remember"
-                    class="rounded border-gray-300">
-                <label for="remember" class="ml-2 text-sm text-gray-700">Ingat saya</label>
-            </div>
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="remember" name="remember" class="rounded border-slate-300 text-teal-600">
+            <span class="text-sm text-slate-600">Ingat saya</span>
+        </label>
 
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
-                Login
-            </button>
-        </form>
+        <button type="submit"
+            class="w-full py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-lg shadow-teal-500/25 transition">
+            Masuk
+        </button>
+    </form>
 
-        <p class="text-center mt-4">
-            Belum punya akun? <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Daftar di sini</a>
-        </p>
-    </div>
-</div>
+    <p class="text-center mt-8 text-sm text-slate-600">
+        Belum punya akun?
+        <a href="{{ route('register') }}" class="font-semibold text-teal-600 hover:text-teal-700">Daftar sekarang</a>
+    </p>
+
+    <p class="text-center mt-4">
+        <a href="{{ route('home') }}" class="text-sm text-slate-400 hover:text-teal-600"><i class="fas fa-arrow-left mr-1"></i> Kembali ke beranda</a>
+    </p>
 @endsection

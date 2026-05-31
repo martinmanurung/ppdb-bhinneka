@@ -2,11 +2,12 @@
     $ortu = $ortu ?? null;
     $prefix = $prefix;
     $required = $required ?? true;
+    $reqMark = $required ? ' *' : '';
 @endphp
 
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div class="sm:col-span-2">
-        <label class="block text-sm font-medium text-gray-700">Nama Lengkap *</label>
+        <label class="block text-sm font-medium text-gray-700">Nama Lengkap{{ $reqMark }}</label>
         <input type="text" name="{{ $prefix }}[nama_lengkap]"
             value="{{ old("{$prefix}.nama_lengkap", $ortu?->nama_lengkap) }}"
             {{ $required ? 'required' : '' }}
@@ -24,9 +25,9 @@
     </div>
 
     <div>
-        <label class="block text-sm font-medium text-gray-700">Kewarganegaraan *</label>
+        <label class="block text-sm font-medium text-gray-700">Kewarganegaraan{{ $reqMark }}</label>
         <input type="text" name="{{ $prefix }}[kewarganegaraan]"
-            value="{{ old("{$prefix}.kewarganegaraan", $ortu?->kewarganegaraan ?? 'Indonesia') }}"
+            value="{{ old("{$prefix}.kewarganegaraan", $ortu?->kewarganegaraan ?? ($required ? 'Indonesia' : '')) }}"
             {{ $required ? 'required' : '' }}
             class="mt-1 block w-full border border-gray-300 rounded-md p-2"
             placeholder="Indonesia">
@@ -36,7 +37,7 @@
     </div>
 
     <div>
-        <label class="block text-sm font-medium text-gray-700">Tempat Lahir *</label>
+        <label class="block text-sm font-medium text-gray-700">Tempat Lahir{{ $reqMark }}</label>
         <input type="text" name="{{ $prefix }}[tempat_lahir]"
             value="{{ old("{$prefix}.tempat_lahir", $ortu?->tempat_lahir) }}"
             {{ $required ? 'required' : '' }}
@@ -47,7 +48,7 @@
     </div>
 
     <div>
-        <label class="block text-sm font-medium text-gray-700">Tanggal Lahir *</label>
+        <label class="block text-sm font-medium text-gray-700">Tanggal Lahir{{ $reqMark }}</label>
         <input type="date" name="{{ $prefix }}[tanggal_lahir]"
             value="{{ old("{$prefix}.tanggal_lahir", $ortu?->tanggal_lahir?->format('Y-m-d')) }}"
             {{ $required ? 'required' : '' }}
@@ -58,7 +59,7 @@
     </div>
 
     <div>
-        <label class="block text-sm font-medium text-gray-700">Agama *</label>
+        <label class="block text-sm font-medium text-gray-700">Agama{{ $reqMark }}</label>
         <select name="{{ $prefix }}[agama]" {{ $required ? 'required' : '' }}
             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
             <option value="">-- Pilih --</option>
@@ -82,11 +83,11 @@
     </div>
 
     <div>
-        <label class="block text-sm font-medium text-gray-700">Pekerjaan *</label>
+        <label class="block text-sm font-medium text-gray-700">Pekerjaan{{ $reqMark }}</label>
         <input type="text" name="{{ $prefix }}[pekerjaan]"
             value="{{ old("{$prefix}.pekerjaan", $ortu?->pekerjaan) }}"
             {{ $required ? 'required' : '' }}
-            class="mt-1 block w-full border border-gray-300 rounded-md p-2 ortu-job">
+            class="mt-1 block w-full border border-gray-300 rounded-md p-2">
         @error("{$prefix}.pekerjaan")
             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
         @enderror
@@ -110,7 +111,7 @@
     @endif
 
     <div class="sm:col-span-2">
-        <label class="block text-sm font-medium text-gray-700">Alamat *</label>
+        <label class="block text-sm font-medium text-gray-700">Alamat{{ $reqMark }}</label>
         <textarea name="{{ $prefix }}[alamat]" rows="2" {{ $required ? 'required' : '' }}
             class="mt-1 block w-full border border-gray-300 rounded-md p-2">{{ old("{$prefix}.alamat", $ortu?->alamat) }}</textarea>
         @error("{$prefix}.alamat")
@@ -119,7 +120,7 @@
     </div>
 
     <div class="sm:col-span-2">
-        <label class="block text-sm font-medium text-gray-700">No. Telepon / WhatsApp *</label>
+        <label class="block text-sm font-medium text-gray-700">No. Telepon / WhatsApp{{ $reqMark }}</label>
         <input type="text" name="{{ $prefix }}[no_telp]"
             value="{{ old("{$prefix}.no_telp", $ortu?->no_telp) }}"
             {{ $required ? 'required' : '' }}

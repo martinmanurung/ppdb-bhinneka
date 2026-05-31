@@ -24,6 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 // Student Routes
 Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+    Route::get('/berkas', [StudentController::class, 'showBerkas'])->name('berkas');
 
     // Biodata Form
     Route::get('/form/biodata', [StudentController::class, 'showBiodataForm'])->name('form.biodata');
@@ -36,6 +37,8 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
     // Konfirmasi & Submit Formulir
     Route::get('/form/konfirmasi', [StudentController::class, 'showKonfirmasiForm'])->name('form.konfirmasi');
     Route::post('/form/submit', [StudentController::class, 'submitRegistration'])->name('form.submit');
+
+    Route::get('/surat-pernyataan', [StudentController::class, 'downloadSuratPernyataan'])->name('surat-pernyataan');
 });
 
 // Admin Routes

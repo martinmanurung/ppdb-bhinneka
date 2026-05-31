@@ -24,9 +24,13 @@ Dokumen ini berisi gambaran umum, fitur utama, dan alur kerja untuk sistem websi
 
 ### Penyerahan Berkas (Offline di Sekolah)
 * Berkas **tidak diunggah online**. Orang tua/wali datang ke sekolah membawa:
-  1. Kartu Keluarga (KK)
-  2. Akta Kelahiran
-  3. Ijazah / Surat Keterangan Lulus (SKL)
+  a. Foto copy Akta kelahiran calon siswa (2 lembar)
+  b. Foto copy Kartu Keluarga (2 lembar)
+  c. Foto copy KTP Orang Tua/Wali — Bapak dan Ibu (2 lembar)
+  d. Foto copy SKTB TK (2 lembar, khusus masuk SD kelas I)
+  e. Foto calon siswa 3×4 (2 lembar, setelah diberikan seragam sekolah)
+  f. Surat pernyataan kesediaan mengikuti peraturan sekolah (bermeterai Rp10.000)
+  g. Surat pernyataan biaya (bermeterai Rp10.000)
 
 ### Validasi & Verifikasi (Sisi Admin — di Sekolah)
 * **Dashboard Verifikator** — Daftar pendaftar yang sudah submit formulir online.

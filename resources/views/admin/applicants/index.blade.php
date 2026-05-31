@@ -1,10 +1,18 @@
 @extends('layouts.admin')
 
-@section('title', 'Daftar Pendaftar')
+@section('title', 'Daftar Calon Siswa')
 
 @section('header')
-    <h1 class="text-xl font-bold text-slate-900">Daftar Pendaftar</h1>
-    <p class="text-sm text-slate-500">Kelola verifikasi berkas fisik dan status pendaftaran</p>
+    <h1 class="text-xl font-bold text-slate-900">
+        {{ request('status') === \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS ? 'Antrian Berkas' : 'Daftar Calon Siswa' }}
+    </h1>
+    <p class="text-sm text-slate-500">
+        @if (request('status') === \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS)
+            Calon siswa yang sudah submit online dan menunggu penyerahan berkas fisik di sekolah
+        @else
+            Kelola verifikasi berkas fisik dan status pendaftaran
+        @endif
+    </p>
 @endsection
 
 @section('content')
@@ -56,7 +64,7 @@
                 <thead class="bg-slate-50">
                     <tr>
                         <th class="px-5 py-3 text-left font-semibold text-slate-600">No</th>
-                        <th class="px-5 py-3 text-left font-semibold text-slate-600">Pendaftar</th>
+                        <th class="px-5 py-3 text-left font-semibold text-slate-600">Calon Siswa</th>
                         <th class="px-5 py-3 text-left font-semibold text-slate-600">Asal Sekolah</th>
                         <th class="px-5 py-3 text-left font-semibold text-slate-600">Jenjang</th>
                         <th class="px-5 py-3 text-left font-semibold text-slate-600">Status</th>

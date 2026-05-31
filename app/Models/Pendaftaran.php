@@ -24,10 +24,43 @@ class Pendaftaran extends Model
         self::STATUS_DITOLAK => 'Ditolak',
     ];
 
+    /** @var list<array{letter: string, label: string, note?: string}> */
     public const REQUIRED_PHYSICAL_DOCUMENTS = [
-        'kk' => 'Kartu Keluarga (KK)',
-        'akta' => 'Akta Kelahiran',
-        'ijazah' => 'Ijazah / Surat Keterangan Lulus (SKL)',
+        [
+            'letter' => 'a',
+            'label' => 'Foto copy Akta kelahiran calon siswa',
+            'note' => '2 lembar',
+        ],
+        [
+            'letter' => 'b',
+            'label' => 'Foto copy Kartu Keluarga',
+            'note' => '2 lembar',
+        ],
+        [
+            'letter' => 'c',
+            'label' => 'Foto copy KTP Orang Tua/Wali (Bapak dan Ibu)',
+            'note' => '2 lembar',
+        ],
+        [
+            'letter' => 'd',
+            'label' => 'Foto copy SKTB TK',
+            'note' => '2 lembar — khusus untuk masuk SD kelas I',
+        ],
+        [
+            'letter' => 'e',
+            'label' => 'Foto calon siswa ukuran 3×4',
+            'note' => '2 lembar — setelah diberikan seragam sekolah',
+        ],
+        [
+            'letter' => 'f',
+            'label' => 'Surat pernyataan kesediaan mengikuti segala peraturan dan ketentuan sekolah yang telah ditandatangani',
+            'note' => 'Bermeterai Rp10.000',
+        ],
+        [
+            'letter' => 'g',
+            'label' => 'Surat pernyataan biaya yang ditandatangani',
+            'note' => 'Bermeterai Rp10.000',
+        ],
     ];
 
     protected $table = 'pendaftaran';

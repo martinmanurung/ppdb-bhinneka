@@ -1,0 +1,172 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+title PPDB Sekolah Bhinneka - Class Diagram
+
+package "App\\Models" {
+    class User {
+        +name: string
+        +email: string
+        +whatsapp: string
+        +password: string
+        +role: string
+        +student(): HasOne
+        +pendaftaran(): HasOne
+        +isAdmin(): bool
+        +isStudent(): bool
+    }
+
+    class Student {
+        +user_id: int
+        +nama_lengkap: string
+        +nama_panggilan: string
+        +nisn: string
+        +tempat_lahir: string
+        +tanggal_lahir: date
+        +jenis_kelamin: string
+        +agama: string
+        +alamat_jalan: string
+        +kota_kabupaten: string
+        +provinsi: string
+        +asal_sekolah: string
+        +jenjang: string
+        +kewarganegaraan: string
+        +anak_ke: int
+        +jumlah_saudara_kandung: int
+        +user(): BelongsTo
+        +pendaftaran(): HasOne
+    }
+
+    class Pendaftaran {
+        +nomor_pendaftaran: string
+        +user_id: int
+        +student_id: int
+        +status: string
+        +submitted_at: datetime
+        +alasan_penolakan: string
+        +generateNomorPendaftaran(): string
+        +user(): BelongsTo
+        +student(): BelongsTo
+        +ayah(): HasOne
+        +ibu(): HasOne
+        +wali(): HasOne
+        +documents(): HasMany
+        +isFormComplete(): bool
+        +hasSubmittedOnline(): bool
+        +canEditForms(): bool
+        +isVerified(): bool
+    }
+
+    class Ayah {
+        +pendaftaran_id: int
+        +nama_lengkap: string
+        +tempat_lahir: string
+        +tanggal_lahir: date
+        +agama: string
+        +kewarganegaraan: string
+        +pendidikan: string
+        +pekerjaan: string
+        +alamat: string
+        +no_telp: string
+        +nik: string
+        +penghasilan: decimal
+        +pendaftaran(): BelongsTo
+    }
+
+    class Ibu {
+        +pendaftaran_id: int
+        +nama_lengkap: string
+        +tempat_lahir: string
+        +tanggal_lahir: date
+        +agama: string
+        +kewarganegaraan: string
+        +pendidikan: string
+        +pekerjaan: string
+        +alamat: string
+        +no_telp: string
+        +nik: string
+        +penghasilan: decimal
+        +pendaftaran(): BelongsTo
+    }
+
+    class Wali {
+        +pendaftaran_id: int
+        +nama_lengkap: string
+        +tempat_lahir: string
+        +tanggal_lahir: date
+        +agama: string
+        +kewarganegaraan: string
+        +pendidikan: string
+        +pekerjaan: string
+        +alamat: string
+        +no_telp: string
+        +nik: string
+        +penghasilan: decimal
+        +hubungan_kerabat: string
+        +pendaftaran(): BelongsTo
+    }
+
+    class Document {
+        +pendaftaran_id: int
+        +document_type: string
+        +file_path: string
+        +file_name: string
+        +file_size: int
+        +mime_type: string
+        +status: string
+        +verification_notes: string
+        +pendaftaran(): BelongsTo
+        +isApproved(): bool
+        +isRejected(): bool
+        +isPending(): bool
+        +getDocumentTypeLabel(): string
+        +getStatusLabel(): string
+    }
+}
+
+enum PendaftaranStatus {
+    Belum Submit
+    Menunggu Penyerahan Berkas
+    Terverifikasi
+    Ditolak
+}
+
+enum DocumentStatus {
+    pending
+    approved
+    rejected
+}
+
+enum DocumentType {
+    kk
+    akta
+    ijazah
+}
+
+User "1" -- "0..1" Student : hasOne
+User "1" -- "0..1" Pendaftaran : hasOne
+Student "1" -- "0..1" Pendaftaran : hasOne
+Pendaftaran "1" -- "1" Ayah : hasOne
+Pendaftaran "1" -- "1" Ibu : hasOne
+Pendaftaran "1" -- "0..1" Wali : hasOne
+Pendaftaran "1" -- "0..*" Document : hasMany
+
+Pendaftaran ..> PendaftaranStatus
+Document ..> DocumentStatus
+Document ..> DocumentType
+
+note right of Pendaftaran
+  nomor_pendaftaran dibuat otomatis
+  format: PPDB-{tahun}-{urutan}
+end note
+
+note bottom of Pendaftaran
+  Status alur utama:
+  - Belum Submit
+  - Menunggu Penyerahan Berkas
+  - Terverifikasi
+  - Ditolak
+end note
+
+@enduml

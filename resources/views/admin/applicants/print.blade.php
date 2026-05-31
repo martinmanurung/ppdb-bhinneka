@@ -60,11 +60,7 @@
         @include('admin.applicants.partials.ortu-print', ['ortu' => $pendaftaran->wali, 'isWali' => true])
     @endif
 
-    <h2>Checklist Berkas Fisik</h2>
-    <table border="1" style="border:1px solid #ccc">
-        @foreach (\App\Models\Pendaftaran::REQUIRED_PHYSICAL_DOCUMENTS as $label)
-            <tr><td width="40">☐</td><td>{{ $label }}</td><td width="100">Sesuai / Tidak</td></tr>
-        @endforeach
-    </table>
+    <h2>Checklist Berkas Fisik yang Perlu Dibawa</h2>
+    <x-berkas-fisik-list variant="print" />
 </body>
 </html>

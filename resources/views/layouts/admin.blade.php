@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-100 min-h-screen">
+@php
+    $statusFilter = request('status');
+    $isAntrianBerkas = request()->routeIs('admin.applicants.index')
+        && $statusFilter === \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS;
+    $isDaftarCalonSiswa = request()->routeIs('admin.applicants.show', 'admin.applicants.print')
+        || (request()->routeIs('admin.applicants.index') && ! $isAntrianBerkas);
+@endphp
     <div class="flex min-h-screen">
         <aside class="hidden lg:flex lg:flex-col w-64 bg-slate-900 text-white shrink-0">
             <div class="p-6 border-b border-slate-700">
@@ -26,19 +33,20 @@
                 </a>
                 <a href="{{ route('admin.applicants.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
-                    {{ request()->routeIs('admin.applicants.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <i class="fas fa-users w-5 text-center"></i>
-                    Daftar Pendaftar
+                    {{ $isDaftarCalonSiswa ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fas fa-user-graduate w-5 text-center"></i>
+                    Daftar Calon Siswa
+                </a>
+                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
+                    {{ $isAntrianBerkas ? 'bg-amber-500 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fas fa-folder-open w-5 text-center"></i>
+                    Antrian Berkas
                     @if (($adminNavCounts['waiting'] ?? 0) > 0)
-                        <span class="ml-auto bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        <span class="ml-auto {{ $isAntrianBerkas ? 'bg-white text-amber-600' : 'bg-amber-500 text-white' }} text-xs font-bold px-2 py-0.5 rounded-full">
                             {{ $adminNavCounts['waiting'] }}
                         </span>
                     @endif
-                </a>
-                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fas fa-folder-open w-5 text-center"></i>
-                    Antrian Berkas
                 </a>
                 <a href="{{ route('admin.export') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
@@ -77,7 +85,8 @@
 
             <div class="lg:hidden bg-slate-900 px-4 py-2 flex gap-2 overflow-x-auto">
                 <a href="{{ route('admin.dashboard') }}" class="text-xs whitespace-nowrap px-3 py-1.5 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white' : 'text-slate-300' }}">Dashboard</a>
-                <a href="{{ route('admin.applicants.index') }}" class="text-xs whitespace-nowrap px-3 py-1.5 rounded-lg {{ request()->routeIs('admin.applicants.*') ? 'bg-blue-600 text-white' : 'text-slate-300' }}">Pendaftar</a>
+                <a href="{{ route('admin.applicants.index') }}" class="text-xs whitespace-nowrap px-3 py-1.5 rounded-lg {{ $isDaftarCalonSiswa ? 'bg-blue-600 text-white' : 'text-slate-300' }}">Calon Siswa</a>
+                <a href="{{ route('admin.applicants.index', ['status' => \App\Models\Pendaftaran::STATUS_MENUNGGU_BERKAS]) }}" class="text-xs whitespace-nowrap px-3 py-1.5 rounded-lg {{ $isAntrianBerkas ? 'bg-amber-500 text-white' : 'text-slate-300' }}">Antrian</a>
                 <a href="{{ route('admin.export') }}" class="text-xs whitespace-nowrap px-3 py-1.5 rounded-lg {{ request()->routeIs('admin.export*') ? 'bg-blue-600 text-white' : 'text-slate-300' }}">Export</a>
             </div>
 

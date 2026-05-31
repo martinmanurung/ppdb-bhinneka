@@ -70,6 +70,11 @@
             <p><strong>WhatsApp:</strong> {{ $pendaftaran->user->whatsapp }}</p>
             <p><strong>Submit:</strong> {{ $pendaftaran->submitted_at?->format('d/m/Y H:i') ?? '-' }}</p>
         </div>
+
+        <div class="bg-amber-50 rounded-2xl border border-amber-200 p-6">
+            <h2 class="font-bold text-amber-900 text-sm mb-3">Berkas Fisik</h2>
+            <x-berkas-fisik-list variant="compact" class="text-xs" />
+        </div>
     </div>
 
     <div class="xl:col-span-2 space-y-6 order-1 xl:order-2">
