@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ asset('assets/logo-bhinneka.jpg') }}">
     <title>PPDB SEKOLAH BHINNEKA</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -43,12 +44,19 @@
             <div class="flex justify-between items-center h-20">
 
                 <a href="#" class="text-2xl font-bold text-teal-700 tracking-tight flex items-center gap-2 group">
-                    <span class="bg-teal-700 text-white w-9 h-9 rounded-lg flex items-center justify-center text-lg font-black shadow-sm group-hover:bg-emerald-600 transition-colors">B</span>
+                    <!-- <span class="bg-teal-700 text-white w-9 h-9 rounded-lg flex items-center justify-center text-lg font-black shadow-sm group-hover:bg-emerald-600 transition-colors"></span> -->
                     SEKOLAH BHINNEKA
                 </a>
 
                 <div class="flex items-center gap-8">
                     
+                    <!-- Mobile hamburger button -->
+                    <button id="mobile-menu-button" type="button" class="md:hidden p-2 rounded-lg hover:bg-slate-100 focus:outline-none" aria-label="Open Menu" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-slate-700">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
                     <div class="flex items-center gap-7 border-r border-slate-200 pr-8 hidden md:flex">
                         <a href="#" class="nav-link flex items-center gap-1 font-medium text-slate-600 hover:text-teal-600 transition-colors text-[15px]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400">
@@ -75,18 +83,34 @@
                     </div>
 
                     <div class="flex gap-3.5 items-center">
-                        <a href="{{ route('login') }}" class="text-slate-700 hover:text-teal-600 font-semibold px-4 py-2.5 rounded-xl transition-all text-sm tracking-wide">
+                        <!-- <a href="{{ route('login') }}" class="text-slate-700 hover:text-teal-600 font-semibold px-4 py-2.5 rounded-xl transition-all text-sm tracking-wide">
                             Login
-                        </a>
+                        </a> -->
                         
-                        <a href="{{ route('register') }}" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md shadow-teal-600/10 hover:shadow-lg hover:shadow-teal-600/20 active:scale-[0.98] transition-all text-sm flex items-center gap-2 tracking-wide">
-                            Daftar Sekarang
+                        <a href="{{ route('register') }}" class="hidden md:inline-flex bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md shadow-teal-600/10 hover:shadow-lg hover:shadow-teal-600/20 active:scale-[0.98] transition-all text-sm items-center gap-2 tracking-wide">
+                            PPDB
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                             </svg>
                         </a>
                     </div>
 
+                </div>
+                
+                <!-- Mobile menu (visible on small screens) -->
+                <div id="mobile-menu" class="md:hidden hidden absolute left-0 right-0 top-20 bg-white shadow-lg border-t border-slate-100 z-50 pointer-events-auto">
+                    <div class="max-w-7xl mx-auto px-6 py-4">
+                        <nav class="flex flex-col gap-3">
+                            <a href="#home" class="font-medium text-slate-700 hover:text-teal-600 py-2">Home</a>
+                            <a href="#profil" class="font-medium text-slate-700 hover:text-teal-600 py-2">Profil</a>
+                            <a href="#fasilitas" class="font-medium text-slate-700 hover:text-teal-600 py-2">Fasilitas</a>
+                            <a href="#visi-misi" class="font-medium text-slate-700 hover:text-teal-600 py-2">Visi Misi</a>
+                            <a href="#ekstrakurikuler" class="font-medium text-slate-700 hover:text-teal-600 py-2">Ekstrakurikuler</a>
+                            <div class="pt-2">
+                                <a href="{{ route('register') }}" class="block w-full text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 rounded-xl font-semibold shadow-md">PPDB</a>
+                            </div>
+                        </nav>
+                    </div>
                 </div>
 
             </div>
@@ -401,6 +425,33 @@
             </div>
         </div>
     </section>
+
+    <script>
+        (function(){
+            const btn = document.getElementById('mobile-menu-button');
+            const menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function(){
+                const isHidden = menu.classList.contains('hidden');
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('block');
+                btn.setAttribute('aria-expanded', String(isHidden));
+            });
+            // close menu when a link is clicked
+            menu.querySelectorAll('a').forEach(function(a){
+                a.addEventListener('click', function(){
+                    menu.classList.add('hidden');
+                });
+            });
+            // close when clicking outside
+            document.addEventListener('click', function(e){
+                if (!menu.classList.contains('hidden')){
+                    const isClickInside = menu.contains(e.target) || btn.contains(e.target);
+                    if (!isClickInside) menu.classList.add('hidden');
+                }
+            });
+        })();
+    </script>
 
 </body>
 </html>
