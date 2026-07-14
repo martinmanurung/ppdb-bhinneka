@@ -7,7 +7,7 @@ Dokumen ini berisi test case blackbox testing dalam format formal untuk kebutuha
 | Elemen | Keterangan |
 |---|---|
 | Nama Sistem | PPDB Bhinneka |
-| Jenis Pengujian | Blackbox Testing |
+| Jenis Pengujian | Blackbox    Testing |
 | Ruang Lingkup | Registrasi dan Login |
 | Tujuan | Memastikan proses pembuatan akun dan autentikasi berjalan sesuai kebutuhan |
 
@@ -44,7 +44,7 @@ Dokumen ini berisi test case blackbox testing dalam format formal untuk kebutuha
 | Login | 6 |
 | Total | 15 |
 
-## Keterangan
+<!-- ## Keterangan
 
 - Status pada tabel diisi setelah proses pengujian dilakukan.
-- Dokumen ini disusun sebagai contoh blackbox testing untuk kebutuhan laporan, sehingga hanya mencakup dua fitur utama yang paling relevan.
+- Dokumen ini disusun sebagai contoh blackbox testing untuk kebutuhan laporan, sehingga hanya mencakup dua fitur utama yang paling relevan. -->
